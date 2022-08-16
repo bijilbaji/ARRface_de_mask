@@ -16,7 +16,7 @@ img_lst = os.listdir(root_img)
 
 def load_model():
     face_encoder = torch.nn.DataParallel(FaceEncoder().cuda(), [0])
-    state_dict = torch.load('/content/ARRface_de_mask/ckpt/inpaint_it_200000.pkl', map_location='cpu')
+    state_dict = torch.load('/content/ARRface_de_mask/ckpt/it_200000.pkl', map_location='cpu')
     face_encoder.load_state_dict(state_dict)
     face_decoder = torch.nn.DataParallel(Face3D().cuda(), [0])
     tri = face_decoder.module.facemodel.tri.unsqueeze(0)
