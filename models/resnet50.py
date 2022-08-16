@@ -189,18 +189,18 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        x = self.conv1(x)  # 128 64
+        x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
-        x = self.maxpool(x)  # 64 256 64
+        x = self.maxpool(x)
 
-        x1 = self.layer1(x)  # 64 256
-        x2 = self.layer2(x1)  # 32 512
-        x3 = self.layer3(x2)  # 16 1024
-        #x = self.layer4(x3)  # 8 2048
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
 
-        #x = self.avgpool(x) # 1 2048
-        return x1, x2, x3
+        x = self.avgpool(x)
+        return x
 
 
 def _resnet(arch, block, layers, pretrained, progress, **kwargs):

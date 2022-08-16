@@ -15,7 +15,7 @@ class BfmExtend(nn.Module):
 
     def load_weight(self):
         pth = pathlib.Path(__file__).parent.parent.absolute()
-        weight_pth = os.path.join(pth, 'BFM/BFM_model_front3.mat')
+        weight_pth = os.path.join(pth, 'BFM/BFM_model_front_uv_stretch.mat')
         bfm = loadmat(weight_pth)
         meanshape = torch.from_numpy(bfm['meanshape']).squeeze()
         mean_ctr = meanshape.view(-1, 3).mean(dim=0).view(1, 1, 3)

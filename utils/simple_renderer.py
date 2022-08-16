@@ -22,7 +22,7 @@ class SimpleRenderer(nn.Module, ABC):
             rot_mat = torch.tensor([[-1, 0, 0], [0, 1, 0], [0, 0, -1]], dtype=torch.float32).expand(verts.shape[0], 3,
                                                                                                     3).to(verts.device)
             trans = torch.zeros_like(verts)
-            trans[:, :, 2] = 5  # 5
+            trans[:, :, 2] = 2  # 5
 
         verts = torch.bmm(verts, rot_mat)
         verts = verts + trans
@@ -60,7 +60,7 @@ class SimpleRenderer(nn.Module, ABC):
         pixel_normals = interpolate_face_attributes(pix_to_face, bary_coords, faces_normals)
         pixel_coords = None
         if point:
-            light_loc = light_point(random=random, device=verts.device)
+            light_loc = light_point(random=random, device=self.device)
             faces_verts = verts_packed[faces_packed]
             pixel_coords = interpolate_face_attributes(pix_to_face, bary_coords, faces_verts)  # to calc light direction
             direction = light_loc - pixel_coords

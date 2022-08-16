@@ -131,25 +131,6 @@ def show_img(img, mode=0):
         plt.show()
 
 
-def beauty_face(img):
-    v1 = 5  # 磨皮程度
-    v2 = 3  # 细节程度
-    dx = v1 * 5  # 双边滤波参数之一
-    fc = v1 * 12.5  # 双边滤波参数之一
-    p = 0.1
-    # 双边滤波
-    # temp1 = cv2.bilateralFilter(img, dx, fc, fc)
-    temp1 = cv2.GaussianBlur(img, (5, 5), 0)
-
-    temp2 = cv2.subtract(temp1, img);
-    temp2 = cv2.add(temp2, (10, 10, 10, 128))
-    # 高斯模糊
-    temp3 = cv2.GaussianBlur(temp2, (2 * v2 - 1, 2 * v2 - 1), 0)
-    temp4 = cv2.add(img, temp3)
-    dst = cv2.addWeighted(img, p, temp4, 1 - p, 0.0)
-    dst = cv2.add(dst, (10, 10, 10, 255))
-    return dst
-
 
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
