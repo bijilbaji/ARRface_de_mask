@@ -9,14 +9,14 @@ import numpy as np
 import os
 import pickle
 
-root_img = './test_data/img/'
-root_ldmk = './test_data/ldmk/'
+root_img = '/content/ARRface_de_mask/test_data/'
+root_ldmk = './content/ARRface_de_mask/ldmk/'
 img_lst = os.listdir(root_img)
 
 
 def load_model():
     face_encoder = torch.nn.DataParallel(FaceEncoder().cuda(), [0, 1])
-    state_dict = torch.load('ckpt/it_200000.pkl', map_location='cpu')
+    state_dict = torch.load('/content/ARRface_de_mask/ckpt/inpaint_it_200000.pkl', map_location='cpu')
     face_encoder.load_state_dict(state_dict)
     face_decoder = torch.nn.DataParallel(Face3D().cuda(), [0, 1])
     tri = face_decoder.module.facemodel.tri.unsqueeze(0)
