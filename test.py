@@ -16,8 +16,7 @@ img_lst = os.listdir(root_img)
 
 def load_model():
     face_encoder = torch.nn.DataParallel(FaceEncoder().cuda(), [0])
-    state_dict = torch.load(
-        '/content/ARRface_de_mask/ckpt/it_200000.pkl', map_location='cpu')
+    state_dict = torch.load('/content/ARRface_de_mask/ckpt/it_200000.pkl', map_location='cpu')
     face_encoder.load_state_dict(state_dict)
     face_decoder = torch.nn.DataParallel(Face3D().cuda(), [0])
     tri = face_decoder.module.facemodel.tri.unsqueeze(0)
@@ -35,20 +34,19 @@ for name in img_lst:
     with open(ldmk_pth, 'rb') as f:
         ldmk = pickle.load(f)
 
-    I = cv2.imread(img_pth)[:, :, ::-1]
+    I = cv2.imread("/content/ARRface_de_mask/input/0.png")[:, :, ::-1]
     J, new_ldmk = Preprocess(I, ldmk)
     J_tensor = img2tensor(J)
 
     with torch.no_grad():
         coeff = face_encoder(J_tensor)
-        verts, tex, id_coeff, ex_coeff, tex_coeff, gamma, keypoints = face_decoder(
-            coeff)
+        verts, tex, id_coeff, ex_coeff, tex_coeff, gamma, keypoints = face_decoder(coeff)
         out = renderer(verts, tri, size=256, colors=tex, gamma=gamma)
         recon = out['rgb']
 
     recon = tensor2img(recon)
     show = np.concatenate((J, recon), 1)
-    cv2.imwrite("/content/result/Result_"+name+".jpg", show[..., ::-1])
+    cv2.imwrite("resutl.jpg",show[...,::-1])
     # cv2.imshow('I', show[...,::-1])
     # key = cv2.waitKey(0)
     # if key == ord('q'):
