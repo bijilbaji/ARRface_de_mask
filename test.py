@@ -9,7 +9,7 @@ import numpy as np
 import os
 import pickle
 import argparse
-# import facerec as fr
+import facerec as fr
 
 fpath = os.path.dirname(os.path.realpath(__file__))
 root_img = fpath +'/input/'
@@ -62,7 +62,8 @@ for name in img_lst:
         recon = out['rgb']
 
     recon = tensor2img(recon)
-    show = np.concatenate((J, recon), 1)
+    names, unfc , fcimg = fr.facedetect(recon)
+    show = np.concatenate((J, fcimg), 1)
     cv2.imwrite(result_path + filename + "_result.jpg", show[..., ::-1])
-    cv2.imwrite(result_path + filename + "_output.jpg", recon)
+    cv2.imwrite(result_path + filename + "_output.jpg", fcimg)
     break
