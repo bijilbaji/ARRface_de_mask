@@ -1,1 +1,0 @@
-landmarks of testing images
