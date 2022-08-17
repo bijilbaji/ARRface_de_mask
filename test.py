@@ -10,7 +10,7 @@ import os
 import pickle
 
 root_img = '/content/ARRface_de_mask/test_data/'
-root_ldmk = './content/ARRface_de_mask/ldmk/'
+root_ldmk = '/content/ARRface_de_mask/ldmk/'
 img_lst = os.listdir(root_img)
 
 
@@ -34,7 +34,7 @@ for name in img_lst:
     with open(ldmk_pth, 'rb') as f:
         ldmk = pickle.load(f)
 
-    I = cv2.imread(img_pth)[:, :, ::-1]
+    I = cv2.imread("/content/ARRface_de_mask/input/0.png")[:, :, ::-1]
     J, new_ldmk = Preprocess(I, ldmk)
     J_tensor = img2tensor(J)
 
@@ -46,9 +46,10 @@ for name in img_lst:
 
     recon = tensor2img(recon)
     show = np.concatenate((J, recon), 1)
-    cv2.imshow('I', show[...,::-1])
-    key = cv2.waitKey(0)
-    if key == ord('q'):
-        break
+    cv2.imwrite("resutl.jpg",show[...,::-1])
+    # cv2.imshow('I', show[...,::-1])
+    # key = cv2.waitKey(0)
+    # if key == ord('q'):
+    #     break
 
 cv2.destroyAllWindows()
