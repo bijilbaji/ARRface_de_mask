@@ -35,7 +35,7 @@ for name in img_lst:
     with open(ldmk_pth, 'rb') as f:
         ldmk = pickle.load(f)
 
-    I = cv2.imread("/content/ARRface_de_mask/input/0.png")[:, :, ::-1]
+    I = cv2.imread(img_pth)[:, :, ::-1]
     J, new_ldmk = Preprocess(I, ldmk)
     J_tensor = img2tensor(J)
 
