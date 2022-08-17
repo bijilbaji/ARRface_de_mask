@@ -8,11 +8,18 @@ import cv2
 import numpy as np
 import os
 import pickle
+import argparse
 
 root_img = '/content/ARRface_de_mask/input/'
 root_ldmk = '/content/ARRface_de_mask/ldmk/'
 img_lst = os.listdir(root_img)
-
+result_path="/content/result/"
+parser = argparse.ArgumentParser()
+parser.add_argument('--image', default='', type=str, help='The filename of image to be completed.')
+args, unknown = parser.parse_known_args()
+input_image = args.image
+filename_full = os.path.basename(input_image)
+filename = filename_full[:filename_full.rfind(".")]
 
 def load_model():
     face_encoder = torch.nn.DataParallel(FaceEncoder().cuda(), [0])
@@ -34,7 +41,7 @@ for name in img_lst:
     with open(ldmk_pth, 'rb') as f:
         ldmk = pickle.load(f)
 
-    I = cv2.imread("/content/ARRface_de_mask/input/0.png")[:, :, ::-1]
+    I = cv2.imread(input_image)[:, :, ::-1]
     J, new_ldmk = Preprocess(I, ldmk)
     J_tensor = img2tensor(J)
 
@@ -46,11 +53,8 @@ for name in img_lst:
 
     recon = tensor2img(recon)
     show = np.concatenate((J, recon), 1)
-    cv2.imwrite("resutl.jpg",show[...,::-1])
-    cv2.imwrite("output.jpg",recon)
-    # cv2.imshow('I', show[...,::-1])
-    # key = cv2.waitKey(0)
-    # if key == ord('q'):
-    #     break
+    cv2.imwrite(result_path + filename +"_result.jpg",show[...,::-1])
+    cv2.imwrite(result_path + filename +"_output.jpg",recon)
+    break
 
 # cv2.destroyAllWindows()
