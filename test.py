@@ -9,21 +9,30 @@ import numpy as np
 import os
 import pickle
 import argparse
+# import facerec as fr
 
-root_img = '/content/ARRface_de_mask/input/'
-root_ldmk = '/content/ARRface_de_mask/ldmk/'
+fpath = os.path.dirname(os.path.realpath(__file__))
+root_img = fpath +'/input/'
+root_ldmk = fpath +'/ldmk/'
+result_path = fpath +'/result/'
+
 img_lst = os.listdir(root_img)
-result_path="/content/result/"
 parser = argparse.ArgumentParser()
-parser.add_argument('--image', default='', type=str, help='The filename of image to be completed.')
+parser.add_argument('--image', default='', type=str,
+                    help='The filename of image to be completed.')
 args, unknown = parser.parse_known_args()
 input_image = args.image
 filename_full = os.path.basename(input_image)
 filename = filename_full[:filename_full.rfind(".")]
+#  code exicution example
+#  python /content/ARRface_de_mask/test.py --image /content/ARRface_de_mask/input/0.png
+#  python test.py --image "G:\Google Drive\13iG\Projects\Current\Face Recgonisson With Mask Removal\git\face_de_mask/input/0.png"
+
 
 def load_model():
     face_encoder = torch.nn.DataParallel(FaceEncoder().cuda(), [0])
-    state_dict = torch.load('/content/ARRface_de_mask/ckpt/it_200000.pkl', map_location='cpu')
+    state_dict = torch.load(
+        fpath + '/ckpt/it_200000.pkl', map_location='cpu')
     face_encoder.load_state_dict(state_dict)
     face_decoder = torch.nn.DataParallel(Face3D().cuda(), [0])
     tri = face_decoder.module.facemodel.tri.unsqueeze(0)
@@ -47,14 +56,13 @@ for name in img_lst:
 
     with torch.no_grad():
         coeff = face_encoder(J_tensor)
-        verts, tex, id_coeff, ex_coeff, tex_coeff, gamma, keypoints = face_decoder(coeff)
+        verts, tex, id_coeff, ex_coeff, tex_coeff, gamma, keypoints = face_decoder(
+            coeff)
         out = renderer(verts, tri, size=256, colors=tex, gamma=gamma)
         recon = out['rgb']
 
     recon = tensor2img(recon)
     show = np.concatenate((J, recon), 1)
-    cv2.imwrite(result_path + filename +"_result.jpg",show[...,::-1])
-    cv2.imwrite(result_path + filename +"_output.jpg",recon)
+    cv2.imwrite(result_path + filename + "_result.jpg", show[..., ::-1])
+    cv2.imwrite(result_path + filename + "_output.jpg", recon)
     break
-
-# cv2.destroyAllWindows()
