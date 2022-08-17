@@ -47,6 +47,7 @@ for name in img_lst:
     recon = tensor2img(recon)
     show = np.concatenate((J, recon), 1)
     cv2.imwrite("resutl.jpg",show[...,::-1])
+    cv2.imwrite("output.jpg",recon)
     # cv2.imshow('I', show[...,::-1])
     # key = cv2.waitKey(0)
     # if key == ord('q'):
