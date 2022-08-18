@@ -12,9 +12,9 @@ import argparse
 import facerec as fr
 
 fpath = os.path.dirname(os.path.realpath(__file__))
-root_img = fpath +'/input/'
-root_ldmk = fpath +'/ldmk/'
-result_path = fpath +'/result/'
+root_img = fpath + '/input/'
+root_ldmk = fpath + '/ldmk/'
+result_path = fpath + '/result/'
 
 img_lst = os.listdir(root_img)
 parser = argparse.ArgumentParser()
@@ -62,8 +62,10 @@ for name in img_lst:
         recon = out['rgb']
 
     recon = tensor2img(recon)
-    names, unfc , fcimg = fr.facedetect(recon)
-    show = np.concatenate((J, fcimg), 1)
+    names, unfc , recon = fr.facedetect(recon)
+    show = np.concatenate((J, recon), 1)
     cv2.imwrite(result_path + filename + "_result.jpg", show[..., ::-1])
-    cv2.imwrite(result_path + filename + "_output.jpg", fcimg)
+    cv2.imwrite(result_path + filename + "_output.jpg", recon)
+    cv2.imshow("result",show[..., ::-1])
+    cv2.waitKey(0)
     break
